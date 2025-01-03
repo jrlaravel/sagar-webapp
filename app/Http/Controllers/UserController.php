@@ -14,20 +14,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    
+
+    public function index()  
     {
-        $is_admin = \Auth::user()->is_admin;
 
-        if($is_admin != '1') {
-            $tasks = Task::with('user')
-                ->where('user_id', \Auth::user()->id)
-                ->where('status', '0')
-                ->get();
-
-            return view('users.index', compact('tasks'));
-        }
-        
-        return view('home');
     }
 
     /**
@@ -35,43 +26,26 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($task_id)
+    public function create()
     {
-        
-        $task = Task::where('user_id', \Auth::user()->id)->where('id', $task_id)->first();
-     
-        if (!$task) {
-            abort(404);
-        }
-
-        return view('users.create', compact('task'));
+        return view('users.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'task_id' => 'required',
-            'user_id' => 'required',
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
         ]);
 
-        $task = Task::where('user_id', \Auth::user()->id)->where('id', $request->task_id)->first();
-     
-        if (!$task) {
-            abort(404);
-        }
+        $saveUser = new User();
+        $saveUser->name = $request->name;
+        $saveUser->email = $request->email;
+        $saveUser->password = \Hash::make($request->password);
+        $saveUser->save();
 
-
-        Followups::create($validated);
-        
-        return redirect()->route('home')->with('success', 'Follow ups created successfully!');
+        return redirect()->route('user.list')->with('success', 'user created successfully!');
     }
 
     /**
@@ -91,9 +65,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return view('users.edit', compact('user'));
     }
 
     /**
@@ -103,9 +77,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        return redirect()->route('user.list')->with('success', 'user update successfully!');
+
     }
 
     /**
@@ -114,8 +98,64 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->route('user.list')->with('success', 'user delete successfully!');
     }
+
+    public function taskList()
+    {
+        $is_admin = \Auth::user()->is_admin;
+
+        if($is_admin != '1') {
+            $tasks = Task::with('user')
+                ->where('user_id', \Auth::user()->id)
+                ->where('status', '0')
+                ->get();
+
+            return view('users.index', compact('tasks'));
+        }
+        
+        return view('home');
+    }
+    
+    public function followCreate($task_id)
+    {
+        $task = Task::where('user_id', \Auth::user()->id)->where('id', $task_id)->first();
+     
+        if (!$task) {
+            abort(404);
+        }
+
+        return view('users.follow-add', compact('task'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function followStore(Request $request)
+    {
+        
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'task_id' => 'required',
+            'user_id' => 'required',
+        ]);
+
+        $task = Task::where('user_id', \Auth::user()->id)->where('id', $request->task_id)->first();
+     
+        if (!$task) {
+            abort(404);
+        }
+
+        Followups::create($validated);
+        
+        return redirect()->route('home')->with('success', 'Follow ups created successfully!');
+    }
+
 }

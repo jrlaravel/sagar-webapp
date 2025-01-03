@@ -3,6 +3,7 @@
 
 @section('content')
     <div class="container">
+        <a href="{{ route('tasks.index') }}" class="btn btn-primary mb-3">Back</a>
         <div class="row justify-content-center">
         <h1>Create New</h1>
 

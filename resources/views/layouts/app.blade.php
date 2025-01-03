@@ -61,6 +61,10 @@
 
                         @if(Auth::user()->is_admin)
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('user.list') }}">{{ __('User List') }}</a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('tasks.index') }}">{{ __('Task') }}</a>
                             </li>
                         @endif
@@ -89,6 +93,24 @@
         </nav>
 
         <main class="py-4">
+            <div class="container">
+                
+                @if(session('success'))
+                <div class="alert alert-success mt-3">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            </div>
             @yield('content')
         </main>
     </div>

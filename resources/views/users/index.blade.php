@@ -3,14 +3,6 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        
-
-        @if(session('success'))
-            <div class="alert alert-success mt-3">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <table class="table">
             <thead>
               <tr>
@@ -25,7 +17,7 @@
                     <td>{{ $task->task_name }}</td>
                     <td>{{ $task->user->name }}</td>
                     <td>
-                        <a href="{{ route('user.follow', $task->id) }}" class="btn btn-warning btn-sm">Add Follow</a>
+                        <a href="{{ route('follow.create', $task->id) }}" class="btn btn-warning btn-sm">Add Follow</a>
                     </td>
               </tr>
               @endforeach

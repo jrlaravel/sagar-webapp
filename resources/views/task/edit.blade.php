@@ -2,12 +2,12 @@
 
 @section('content')
     <div class="container">
+        <a href="{{ route('tasks.index') }}" class="btn btn-primary mb-3">Back</a>
         <h1>Edit </h1>
 
         <form action="{{ route('tasks.update', $task->id) }}" method="POST">
             @csrf
             @method('PUT')
-
             <div class="form-group">
                 <label for="task_name"></label>
                 <select class="form-select" name="user_id" id="user_id" required>

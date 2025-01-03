@@ -120,6 +120,11 @@ class TaskController extends Controller
         $task->save();
         
         return redirect()->route('tasks.index')->with('success', 'tasks status  successfully!');
-        
+    }
+
+    public function userList()
+    {
+        $users = User::where('is_admin', '0')->get();
+        return view('users.list', compact('users'));
     }
 }

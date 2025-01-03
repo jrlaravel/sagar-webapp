@@ -25,19 +25,18 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\UserController::class, 'index'])->name('home');
-Route::get('/home', [UserController::class, 'index'])->name('home');
+// Route::get('/home', [UserController::class, 'index'])->name('home');
 
 
 Route::middleware(['is_admin'])->group(function () {
     Route::resource('tasks', TaskController::class);
     Route::get('/status/{task_id}', [TaskController::class, 'status'])->name('tasks.status');
-    // Add other admin-only routes here
+    Route::resource('user', UserController::class);
+    Route::get('/user-list', [TaskController::class, 'userList'])->name('user.list');
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [UserController::class, 'index'])->name('home');
-
-    Route::get('/create/{task_id}', [UserController::class, 'create'])->name('user.follow');
-    Route::post('/store', [UserController::class, 'store'])->name('user.store');
+    Route::get('/home', [UserController::class, 'taskList'])->name('home');
+    Route::get('/follow-up/{task_id}', [UserController::class, 'followCreate'])->name('follow.create');
+    Route::post('/follow-save', [UserController::class, 'followStore'])->name('follow.store');
 });

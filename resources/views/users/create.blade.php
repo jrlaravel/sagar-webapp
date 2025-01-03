@@ -3,20 +3,34 @@
 
 @section('content')
     <div class="container">
+        <a href="{{ route('user.list') }}" class="btn btn-primary mb-3">Back</a>
         <div class="row justify-content-center">
 
-        <h1>Create Follow Up</h1>
+        <h1>Create User</h1>
 
         <form action="{{ route('user.store') }}" method="POST">
             @csrf
             
-            <input type="hidden" name="task_id" value="{{ $task->id }}" />
-            <input type="hidden" name="user_id" value="{{ $task->user_id }}" />
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                @error('name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
             <div class="form-group">
-                <label for="title">follow Name</label>
-                <input type="text" name="title" id="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}" required>
-                @error('title')
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="email">Passwrod</label>
+                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" value="{{ old('password') }}" required>
+                @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>

@@ -4,14 +4,6 @@
 <div class="container">
     <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Create Task</a>
     <div class="row justify-content-center">
-        
-
-        @if(session('success'))
-            <div class="alert alert-success mt-3">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <table class="table">
             <thead>
               <tr>
