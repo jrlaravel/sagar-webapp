@@ -8,7 +8,7 @@
             <thead>
               <tr>
                 <th>Task</th>
-                <th>user Name</th>
+                <th>User Name</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -27,12 +27,14 @@
                     </td>
                     <td>
                         <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-primary btn-sm">view</a>
-                        <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
+                        @if($task->status != '1')
+                          <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                          <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                          </form>
+                        @endif
                     </td>
               </tr>
               @endforeach
